@@ -23,6 +23,7 @@ while cap.isOpened():
     mask.setflags(write=1)
     mask[mask < 100] = 0
     mask[mask >= 100] = 1
+    masked = cv2.bitwise_and(frame, frame, mask=mask)
     # Mask original image
     masked = cv2.bitwise_and(frame, frame, mask=mask)
 
