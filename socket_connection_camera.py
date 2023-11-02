@@ -4,21 +4,15 @@ import pickle
 import struct
 # from rembg import remove
 import numpy as np
-import os
+# import os
 import sys
+import pygame.mixer
 
 
-# Check the platform to determine the appropriate command
-def beep():
-    if os.name == 'posix':
-        # macOS and Linux
-        os.system("echo -e '\a'")
-    elif os.name == 'nt':
-        # Windows
-        import winsound
-        winsound.Beep(1000, 100)  # You can adjust the frequency (Hz) and duration (ms) as needed
-    else:
-        print("Beep not supported on this platform")
+def play_mp3(file_path):
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
 
 
 def get_mean_channels(image):
@@ -111,6 +105,7 @@ while True:
                 counter += 1
                 print("Image saved.")
                 cv2.imwrite("images/img-%s-cam-%d_%04d.jpg" % (sample_name, camera_number, counter), decoded_image)
+                play_mp3("sounds/beep.mp3")
                 contact_detected = True
         else:
             contact_detected = False
