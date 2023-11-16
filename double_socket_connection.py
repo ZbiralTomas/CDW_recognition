@@ -7,11 +7,11 @@ import numpy as np
 import sys
 
 
-HOST1 = "169.254.120.200"
+HOST1 = "169.254.120.100"
 PORT1 = 1035
 pi1_connected = True
 
-HOST2 = "169.254.120.100"
+HOST2 = "169.254.120.200"
 PORT2 = 1034
 pi2_connected = True
 

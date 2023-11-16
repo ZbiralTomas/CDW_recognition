@@ -44,7 +44,7 @@ def create_masks(path, save_path):
         image_np = np.array(mask_image)
         cv2.imwrite(os.path.join(save_path+mask_filename), image_np)
 
-create_masks("images/CDW_whole_fragments/Asphalt", "images/CDW_masks/Asphalt")
+create_masks("images/unet_data/CDW_whole_fragments/Asphalt", "images/unet_data/CDW_masks/Asphalt")
 
 
 

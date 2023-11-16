@@ -75,7 +75,7 @@ connection = client_socket.makefile('wb')
 print("Connection established at {}: {}".format(receiver_ip, receiver_port))
 
 cam = Picamera2()
-controls = {"ExposureTime": 1000, "AnalogueGain": 1.0, "AwbEnable": False, "ColourGains": (2.25, 2.25), "ScalerCrop": (600, 250, 800, 850)} 
+controls = {"ExposureTime": 1000, "AnalogueGain": 1.0, "AwbEnable": False, "ColourGains": (2.25, 2.25), "ScalerCrop": (500, 150, 1000, 1000)}
 main = {"size": (1900, 1100)}
 capture_config = cam.create_preview_configuration(main = main, controls=controls)
 cam.configure(capture_config)

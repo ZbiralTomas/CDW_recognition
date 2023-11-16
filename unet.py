@@ -1,14 +1,14 @@
 import numpy as np
 import os
-import cv2
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import cv2
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import shuffle
 import matplotlib.pyplot as plt
 import elasticdeform
 import tensorflow.keras.backend as K
+import pandas as pd
 
 
 # Define Intersection over Union (IoU) metric
@@ -36,8 +36,11 @@ def augment_data(images, masks, rotation_range=(-15, 15)):
     augmented_masks_rotated_deformed = []
     augmented_images_deformed = []
     augmented_masks_deformed = []
+    i = 0
 
     for image, mask in zip(images, masks):
+        print(f"Augmenting image number {i}")
+        i += 1
         # Randomly rotate the image and mask within the specified range
         angle = np.random.uniform(rotation_range[0], rotation_range[1])
         image_rotated = rotate_image(image, angle)
@@ -90,7 +93,12 @@ def load_images_from_directory(directory):
 
     # Iterate through the contents of the directory
     for root, _, files in os.walk(directory):
+        i = 0
         for file_name in files:
+            i += 1
+            if i % 100 == 0:
+                print(f"{i} images loaded")
+
             file_path = os.path.join(root, file_name)
 
             # Check if the file is an image (you can add more extensions as needed)
@@ -169,28 +177,10 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 # X_train and y_train should contain your training data
 X_data = load_images_from_directory("images/CDW_whole_fragments")
 Y_data = load_images_from_directory("images/CDW_masks")
-(
-    augmented_images_rotated,
-    augmented_masks_rotated,
-    augmented_images_rotated_deformed,
-    augmented_masks_rotated_deformed,
-    augmented_images_deformed,
-    augmented_masks_deformed,
-) = augment_data(
-    X_data,
-    Y_data,
-    rotation_range=(-15, 15)
-)
 
-X_data.append(augmented_images_deformed)
-X_data.append(augmented_images_rotated_deformed)
-X_data.append(augmented_images_rotated)
-Y_data.append(augmented_masks_deformed)
-Y_data.append(augmented_masks_rotated_deformed)
-Y_data.append(augmented_masks_rotated)
 
-X_train, X_temp, Y_train, Y_temp = train_test_split(X_data, Y_data, test_size=0.2, random_state=42)
-X_val, X_test, Y_val, Y_test = train_test_split(X_temp, Y_temp, test_size=0.5, random_state=42)
+X_train, X_temp, Y_train, Y_temp = train_test_split(X_data, Y_data, test_size=0.2, random_state=42, shuffle=True)
+X_val, X_test, Y_val, Y_test = train_test_split(X_temp, Y_temp, test_size=0.5, random_state=42, shuffle=True)
 
 # Train the model with 100 epochs
 history = model.fit(X_train, Y_train, epochs=100, batch_size=8, validation_data=[X_val, Y_val])
@@ -200,6 +190,11 @@ pixel_accuracy_values = history.history['pixel_accuracy_metric']
 
 for epoch, iou, pixel_accuracy in zip(range(1, len(iou_values) + 1), iou_values, pixel_accuracy_values):
     print(f"Epoch {epoch}: IoU = {iou:.4f}, Pixel Accuracy = {pixel_accuracy:.4f}")
+
+hist_df = pd.DataFrame(history.history)
+hist_csv_file = 'history.csv'
+with open(hist_csv_file, mode='w') as f:
+    hist_df.to_csv(f)
 
 # Plot the training and validation loss over epochs
 plt.plot(history.history['loss'], label='Training Loss')
