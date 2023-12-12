@@ -11,6 +11,7 @@ from hx711 import HX711
 
 
 # receiver_ip = '169.254.73.204'
+# Slečna Terezka - definice IP a portu
 receiver_ip = '169.254.120.100'
 receiver_port = 1035
 n_values_for_averaging = 2
@@ -69,6 +70,8 @@ if use_weight:
 else:
     weight = 0.0
 
+# Slečna Terezka - připojení skrze socket
+
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((receiver_ip, receiver_port))
 connection = client_socket.makefile('wb')
@@ -87,6 +90,8 @@ cam.start()
 
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 100]
 # input('Press Enter to begin reading')
+
+# Slečna Terezka - tenhle cyklus sejme obrázek, případně změří váhu, dá je do listu, který zakóduje pomocí pickle a odešle
 
 while True:
     frame = cam.capture_array()
