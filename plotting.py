@@ -43,12 +43,6 @@ if test_normal_distribution(ground_truth_weights) == False or test_normal_distri
 else:
     weight_correlation_coefficient = np.corrcoef(ground_truth_weights, measured_weights)[0, 1]
 
-test_data = [502.69, 466.14, 391.66, 546.1, 578.02, 520.28, 501.92, 501.47, 490.05, 512.81, 590.31, 455.49, 513.1,
-             463.59, 419.67, 442.46, 515.31, 481.53, 450.06, 538.11, 455.22, 350.17, 565.94, 550.63, 551.02, 415.12,
-             549.73, 446.86, 509.65, 452.25, 581.62, 543.7, 571.22, 570.88, 459.67, 521.22, 516.55, 514.45, 550.79,
-             460.01]
-test_normal_distribution(test_data)
-
 ground_truth_volumes = data["gt volume[ml]"]
 measured_volumes = data["calculated volume[ml]"]
 volume_difference = data["volume difference[ml]"]
